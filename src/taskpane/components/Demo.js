@@ -12,21 +12,24 @@ function Demo() {
     }
 
     useEffect(() => {
-        Excel.run(function (context){
-            // setval((prev)=>(prev+1));
-            var sheet = context.workbook.worksheets.getItem('jhk');
-            var range = sheet.getRange("C11");
-            // var r2 = sheet.getRange("G17");
-            // range.load('values');
-            return context.sync()
-            .then(function (){
-                range.values="hello mr excel"
-            // setval(vall);
-            })
+        // Excel.run(function (context){
+        //     // setval((prev)=>(prev+1));
+        //     var sheet = context.workbook.worksheets.getItem('jhk');
+        //     var range = sheet.getRange("C11");
+        //     // var r2 = sheet.getRange("G17");
+        //     // range.load('values');
+        //     return context.sync()
+        //     .then(function (){
+        //         range.values="hello mr excel"
+        //     // setval(vall);
+        //     })
             
-            range.format.autofitColumns();
+        //     range.format.autofitColumns();
            
-        });
+        // });
+        // var excel = new ActiveXObject("Excel.Application");
+        // excel.Visible = true;
+        // excel.Workbooks.Open("Invoice_jh_aus.xlsm");
        
     }, [])
     

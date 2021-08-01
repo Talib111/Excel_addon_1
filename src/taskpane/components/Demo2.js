@@ -112,16 +112,77 @@ function Demo2() {
             var sheet = context.workbook.worksheets.getItem('jhk');
             // var range = sheet.getRange("A10");
            
-           
+            var range_add = "A5:D5";
+            var sheet_name = "jhk";
+            var range_work = context.workbook.worksheets.getItem(sheet_name).getRange(range_add);
+            range_work.merge(true);
+            
             return context.sync()
             .then(function (){
+
+              var date = new Date();
+              var day = date.getDate();
+              var month = date.getMonth()+1;
+              var year = date.getFullYear();
+              
+              sheet.getRange("A4").values = "JHARKHAND AUSHADHALAYA";
+              sheet.getRange("A5").values = "New garden siram toli chowk near sarna maidan Ranchi, 834010, jharkhand";
+              sheet.getRange("G4").values = "mob1";
+              sheet.getRange("G5").values = "mob2";
+              sheet.getRange("G6").values = "email";
+              sheet.getRange("G8").values = "Invoice no";
+              sheet.getRange("G9").values = "Date";
+              sheet.getRange("G11").values = "Created By";
+              sheet.getRange("H4").values = "983515018";
+              sheet.getRange("H5").values = "8084435969";
+              sheet.getRange("H6").values = "aushadhalayajharkhand@gmail.com";
+              sheet.getRange("H8").values = "2219";
+              sheet.getRange("H9").values = day+"-"+month+"-"+year;
+              sheet.getRange("H11").values = "0058";
+
+              // range.format.fill.color = "yellow";
+              sheet.getRange("A5").format.wrapText= false;
+              
+             
+
+
+              sheet.getRange("A10").values = patient;
+              sheet.getRange("A11").values = address+" "+phone;
+             
+              var total_cost_of_product = 0
               for(var i=0;i<=item_no.length - 1;i++){
                var idn = i+15;
               sheet.getRange("A"+idn).values = pro_array[i];
               sheet.getRange("B"+idn).values = cost_array[i];
               sheet.getRange("C"+idn).values = qty_array[i];
               sheet.getRange("D"+idn).values = gst_array[i];
+
+              var total_multi = parseInt(cost_array[i])* parseInt(qty_array[i]);
+              total_cost_of_product = total_cost_of_product + total_multi;
               }
+              var mode_of_pay = item_no.length+14+3;
+              var check_st = mode_of_pay+1;
+              sheet.getRange("A"+mode_of_pay).values = "Mode of Payment";
+              sheet.getRange("D"+mode_of_pay).values = "ONLINE";
+              sheet.getRange("A"+check_st).values = "Check is not allowed";
+              //total
+              sheet.getRange("F"+mode_of_pay).values = "Total";
+              var dis_range = mode_of_pay+1;
+              var final_t_range = mode_of_pay+2;
+
+              sheet.getRange("F"+mode_of_pay).values = "Total";
+              sheet.getRange("F"+dis_range).values = "Discount %";
+              sheet.getRange("F"+final_t_range).values = "Final Total(inr)";
+
+              sheet.getRange("H"+mode_of_pay).values = total_cost_of_product;
+              sheet.getRange("H"+dis_range).values = "300";
+              sheet.getRange("H"+final_t_range).values = "2200";
+
+              var info_txt_rng = check_st + 7;
+              var sign_range = info_txt_rng + 4
+              sheet.getRange("A"+info_txt_rng).values = "झारखंड औशाधालय द्वारा दी गई सारी दवाईयो को मै बिना किसी दबाव के अपनी सहमती से ले रहा हूँ |";
+              sheet.getRange("A"+sign_range).values = "Patient Signature";
+              sheet.getRange("H"+sign_range).values = "Controler Signature";
 
               // sheet.getRange("A10").values = patient;
               // sheet.getRange("A11").values = address+" "+phone;
