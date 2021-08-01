@@ -11,6 +11,9 @@ function Demo2() {
   const [select_qty_input, setSelect_qty_input] = useState([]);
   //gst array
   const [select_gst_input, setSelect_gst_input] = useState([]);
+  const [discount_state, setdiscount_state] = useState(0);
+  const [mode_state, setmode_state] = useState("CASH");
+  
 
   //single object of all array
   const [all, setall] = useState({});
@@ -46,6 +49,18 @@ function Demo2() {
 
     setSelect_gst_input({ ...select_gst_input, [s_id]: s_val });
   };
+  //discount function
+  const discount_handle = (e) => {
+    var s_val = e.target.value;
+
+    setdiscount_state(s_val);
+  };
+  const mode_handle = (e) => {
+    var s_val = e.target.value;
+
+    setmode_state(s_val);
+  };
+
 
   var pro_array;
   var cost_array;
@@ -152,37 +167,69 @@ function Demo2() {
               var total_cost_of_product = 0
               for(var i=0;i<=item_no.length - 1;i++){
                var idn = i+15;
+
+               var range_add1 = "A"+idn+":"+"B"+idn;
+               var range_add2 = "C"+idn+":"+"D"+idn;
+               var range_add3 = "E"+idn+":"+"F"+idn;
+               var range_add4 = "G"+idn+":"+"H"+idn;
+               
+               var range_work1 = context.workbook.worksheets.getItem(sheet_name).getRange(range_add1);
+               var range_work2 = context.workbook.worksheets.getItem(sheet_name).getRange(range_add2);
+               var range_work3 = context.workbook.worksheets.getItem(sheet_name).getRange(range_add3);
+               var range_work4 = context.workbook.worksheets.getItem(sheet_name).getRange(range_add4);
+               range_work1.merge(true);
+               range_work2.merge(true);
+               range_work3.merge(true);
+               range_work4.merge(true);
+
               sheet.getRange("A"+idn).values = pro_array[i];
-              sheet.getRange("B"+idn).values = cost_array[i];
-              sheet.getRange("C"+idn).values = qty_array[i];
-              sheet.getRange("D"+idn).values = gst_array[i];
+              sheet.getRange("C"+idn).values = cost_array[i];
+              sheet.getRange("E"+idn).values = qty_array[i];
+              sheet.getRange("G"+idn).values = gst_array[i];
 
               var total_multi = parseInt(cost_array[i])* parseInt(qty_array[i]);
               total_cost_of_product = total_cost_of_product + total_multi;
+
+             
               }
+              //total row
+              var total_row_rng = item_no.length+14+1;
+              var totl_row_rng_color = "A"+total_row_rng+":"+"I"+total_row_rng;
+              sheet.getRange(totl_row_rng_color).format.fill.color="blue";
+              sheet.getRange("B"+total_row_rng).values = "Grand Total(inr)";
+              sheet.getRange("H"+total_row_rng).values = total_cost_of_product;
+
               var mode_of_pay = item_no.length+14+3;
               var check_st = mode_of_pay+1;
               sheet.getRange("A"+mode_of_pay).values = "Mode of Payment";
               sheet.getRange("D"+mode_of_pay).values = "ONLINE";
               sheet.getRange("A"+check_st).values = "Check is not allowed";
+
               //total
-              sheet.getRange("F"+mode_of_pay).values = "Total";
               var dis_range = mode_of_pay+1;
               var final_t_range = mode_of_pay+2;
 
               sheet.getRange("F"+mode_of_pay).values = "Total";
-              sheet.getRange("F"+dis_range).values = "Discount %";
+              sheet.getRange("F"+dis_range).values = "Discount ("+discount_state+"%)";
               sheet.getRange("F"+final_t_range).values = "Final Total(inr)";
+              // % calculation
+              var percent_value = (total_cost_of_product * parseInt(discount_state)) / 100;
+              //final_total
+              var final_total_price = total_cost_of_product - percent_value;
 
               sheet.getRange("H"+mode_of_pay).values = total_cost_of_product;
-              sheet.getRange("H"+dis_range).values = "300";
-              sheet.getRange("H"+final_t_range).values = "2200";
+              sheet.getRange("H"+dis_range).values = percent_value;
+              sheet.getRange("H"+final_t_range).values = final_total_price;
 
               var info_txt_rng = check_st + 7;
               var sign_range = info_txt_rng + 4
               sheet.getRange("A"+info_txt_rng).values = "झारखंड औशाधालय द्वारा दी गई सारी दवाईयो को मै बिना किसी दबाव के अपनी सहमती से ले रहा हूँ |";
               sheet.getRange("A"+sign_range).values = "Patient Signature";
               sheet.getRange("H"+sign_range).values = "Controler Signature";
+
+
+              // //getting total number of rows
+              
 
               // sheet.getRange("A10").values = patient;
               // sheet.getRange("A11").values = address+" "+phone;
@@ -378,7 +425,7 @@ function Demo2() {
               
                <button className="btn btn-sm btn-primary text-white mt-3 mb-3"  onClick={add_item}>➕ Add Product</button>
                <div className="row mt-5">
-                 <div className="col-sm-4"> <label htmlFor="discount">Discount %</label> <input id="discount" type="text" value="0" /></div>
+                 <div className="col-sm-4"> <label htmlFor="discount">Discount %</label> <input onChange={discount_handle} id="discount" type="text" /></div>
                  <div className="col-sm-6 offset-2"><label htmlFor="mode">Mode of Payment</label><div><select className="px-2" name="mode" id="mode"><option value="cash">CASH</option>
                  <option value="online">ONLINE</option></select></div></div>
                </div>
